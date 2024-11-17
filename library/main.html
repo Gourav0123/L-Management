@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #app {
+            width: 300px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px -10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="loginPage">
+            <h2>Login to Library System</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p id="loginError" style="color: red;"></p>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="mainMenu" class="hidden">
+            <h2>Library System</h2>
+            <button onclick="showAddBooks()">1. Add Books</button>
+            <button onclick="displayBooks()">2. Display Books Information</button>
+            <button onclick="searchBooks()">3. Search Books (Book Status)</button>
+            <button onclick="exitSystem()">4. Exit</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Add Books Menu -->
+        <div id="addBooksMenu" class="hidden">
+            <h3>Select Category</h3>
+            <button onclick="chooseCategory('Computers')">1. Computers</button>
+            <button onclick="chooseCategory('Electronics')">2. Electronics</button>
+            <button onclick="chooseCategory('Mechanical')">3. Mechanical</button>
+            <button onclick="showMainMenu()">Back</button>
+        </div>
+
+        <!-- Search Books Menu -->
+        <div id="searchBooksMenu" class="hidden">
+            <h3>Enter Book Code</h3>
+            <input type="text" id="bookCodeInput" placeholder="Enter book code">
+            <button onclick="searchBookByCode()">Search</button>
+            <button onclick="showMainMenu()">Back</button>
+            <p id="searchResult"></p>
+        </div>
+
+        <!-- Exit Message -->
+        <div id="exitMessage" class="hidden">
+            <h3>Library is closed.</h3>
+            <p>Have a nice day!</p>
+        </div>
+    </div>
+
+    <script>
+        const books = {
+            "123": { name: "Introduction to C", author: "John Devid", pages: 300, status: "2 Copies left" },
+            "234": { name: "Introduction to Python", author: "Philips Boy", pages: 526, status: "10 Copies left" },
+            "456": { name: "Introduction to Java", author: "Jagga Dakku", pages: 785, status: "1 Copy left" },
+            "678": { name: "Practical Electronics for Inventors", author: "pappi lehri", pages: 451, status: "20 Copies left" },
+            "890": { name: "The Art of Electronics", author: "Introus langda", pages: 365, status: "30 Copies left" },
+            "478": { name: "Fundamentals of Digital Circuits", author: "Jingur sous", pages: 459, status: "18 Copies left" },
+            "458": { name: "Introduction to Autocad", author: "Lala Lal", pages: 562, status: "Out of Stock" },
+            "869": { name: "Fundamentals of Thermodynamics", author: "Throsuns Suin", pages: 586, status: "5 Copies left" },
+            "152": { name: "Mechanical Engineering: Conventional and Objective Type", author: "Rana Naga", pages: 623, status: "4 Copies left" },
+        };
+
+        const validUsername = "user";
+        const validPassword = "password";
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+
+            if (username === validUsername && password === validPassword) {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainMenu').classList.remove('hidden');
+                loginError.textContent = '';
+            } else {
+                loginError.textContent = 'Invalid username or password.';
+            }
+        }
+
+        function logout() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showAddBooks() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('addBooksMenu').classList.remove('hidden');
+        }
+
+        function chooseCategory(category) {
+            alert(`You have chosen the ${category} category. Feature to add books is under development.`);
+            showMainMenu();
+        }
+
+        function displayBooks() {
+            let bookList = Object.keys(books).map(code => {
+                const book = books[code];
+                return `${code} - ${book.name} by ${book.author}, ${book.pages} pages, ${book.status}`;
+            }).join("\n");
+            alert(`Books Information:\n\n${bookList}`);
+        }
+
+        function searchBooks() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('searchBooksMenu').classList.remove('hidden');
+        }
+
+        function searchBookByCode() {
+            const code = document.getElementById('bookCodeInput').value.trim();
+            const result = books[code];
+            if (result) {
+                document.getElementById('searchResult').innerText = `Book Name: ${result.name}\nAuthor: ${result.author}\nPages: ${result.pages}\nStatus: ${result.status}`;
+            } else {
+                document.getElementById('searchResult').innerText = "Book not found.";
+            }
+        }
+
+        function exitSystem() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('exitMessage').classList.remove('hidden');
+        }
+
+        function showMainMenu() {
+            document.getElementById('addBooksMenu').classList.add('hidden');
+            document.getElementById('searchBooksMenu').classList.add('hidden');
+            document.getElementById('exitMessage').classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+            document.getElementById('searchResult').innerText = '';
+            document.getElementById('bookCodeInput').value = '';
+        }
+    </script>
+</body>
+</html>
